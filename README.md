@@ -1,10 +1,10 @@
-# Zig ClockWork Executor
+#EX Worker
 
 **A high-performance HTTP job executor for distributed request processing.**
 
 ## Overview
 
-The Zig ClockWork Executor is the open-source execution engine that powers distributed HTTP job processing across networks of machines. It's designed to make HTTP requests politely and efficiently while respecting rate limits and avoiding server overload.
+The EZworker is the open-source execution engine that powers distributed HTTP job processing across networks of machines. It's designed to make HTTP requests politely and efficiently while respecting rate limits and avoiding server overload.
 
 ## Goals
 
@@ -71,18 +71,6 @@ pub fn main() !void {
 ## Integration
 
 This executor is designed to be integrated into larger distributed job systems. It handles the core HTTP execution while delegating job management, scheduling, and coordination to external systems.
-
-### ClockWork Integration
-
-This executor was originally built as the execution engine for **ClockWork** - a distributed job scheduling and orchestration platform. ClockWork provides:
-
-- **Global job coordination** across multiple regions
-- **Intelligent retry logic** with geographic failover  
-- **Rate limiting coordination** to prevent server overload
-- **Real-time job monitoring** and analytics
-- **Webhook delivery** with guaranteed delivery guarantees
-
-While ClockWork is a commercial platform, this executor is open source so the community can benefit from high-performance HTTP execution and contribute improvements back to the ecosystem.
 
 ## Contributing
 
