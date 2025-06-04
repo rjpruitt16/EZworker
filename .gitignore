@@ -1,0 +1,22 @@
+# Zig build artifacts
+zig-out/
+zig-cache/
+.zig-cache/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Don't commit proprietary integration files
+puller.zig
+reporter.zig
+config.zig
+secrets.zig
+
+# Test files that use proprietary code
+test_integration.zig
+main_worker.zig
