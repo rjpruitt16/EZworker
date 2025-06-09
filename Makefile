@@ -2,7 +2,7 @@
 
 # Docker image to use (build locally)
 ZIG_IMAGE = zig-dev
-DOCKER_RUN = docker run --rm -v $(shell pwd):/workspace -w /workspace $(ZIG_IMAGE)
+DOCKER_RUN = docker run --rm --network=host -v $(shell pwd):/workspace -w /workspace $(ZIG_IMAGE)
 
 # Build the Docker image first
 setup:
@@ -31,6 +31,17 @@ version:
 clean:
 	@echo "🧹 Cleaning build artifacts..."
 	$(DOCKER_RUN) rm -rf zig-out zig-cache
+
+# Add local commands
+run-local:
+	@echo "🚀 Running locally..."
+	zig build run
+
+build-local:
+	@echo "🔨 Building locally..."
+	zig build
+
+dev-local: build-local run-local
 
 # Development workflow
 dev: build run
