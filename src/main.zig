@@ -1,37 +1,27 @@
 const std = @import("std");
-const executor = @import("executor.zig");
+const orchestrator = @import("orchestrator.zig");
 
 pub fn main() !void {
-    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
-    defer _ = gpa.deinit();
-    const allocator = gpa.allocator();
+    const allocator = std.heap.c_allocator;
 
     std.log.info("🚀 EZworker HTTP Job Executor Starting...", .{});
 
-    // Example job
-    const headers = [_]executor.Header{
-        .{ .name = "User-Agent", .value = "EZworker/1.0" },
-        .{ .name = "Accept", .value = "application/json" },
+    // Load configuration (could be from env vars or config file)
+    const config = orchestrator.OrchestratorConfig{
+        .clockwork_url = std.process.getEnvVarOwned(allocator, "CLOCKWORK_URL") catch "http://localhost:4000",
+        .poll_interval_seconds = 1,
+        .max_jitter_ms = 200,
+        .jobs_per_pull = 30,
+        .rate_limit_per_second = 2,
+        .executor_thread_count = 4,
     };
 
-    const job = executor.Job{
-        .method = .GET,
-        .url = "http://httpbin.org/get",
-        .headers = &headers,
-        .body = null,
-        .timeout_ms = 30000,
-    };
+    // Create and run the orchestrator
+    var orch = try orchestrator.Orchestrator.init(allocator, config);
+    defer orch.deinit();
 
-    // Execute with callback
-    executor.executeJob(allocator, job, handleResult);
+    // Run the orchestrator (blocks until shutdown)
+    try orch.run();
 
-    std.log.info("✨ Job execution completed", .{});
-}
-
-fn handleResult(result: executor.JobResult) void {
-    if (result.success) {
-        std.log.info("✅ Job Success - Status: {?d}, Time: {d}ms", .{ result.status_code, result.execution_time_ms });
-    } else {
-        std.log.err("❌ Job Failed - Error: {?s}", .{result.error_message});
-    }
+    std.log.info("✨ EZworker shutdown complete", .{});
 }
